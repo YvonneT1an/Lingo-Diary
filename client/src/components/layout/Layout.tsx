@@ -20,7 +20,7 @@ export default function Layout({ children }: LayoutProps) {
       {/* Desktop Top Navbar */}
       <header className="hidden md:flex items-center justify-between h-16 px-8 border-b bg-card/50 backdrop-blur-sm sticky top-0 z-20">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-2xl font-bold text-primary">
             LingoDiary
           </h1>
         </div>
@@ -51,7 +51,7 @@ export default function Layout({ children }: LayoutProps) {
       <main className="flex-1 flex flex-col min-h-0 w-full max-w-4xl mx-auto pb-20 md:pb-8 pt-0 md:pt-8 px-0 md:px-4">
         {/* Mobile Header */}
         <header className="md:hidden flex items-center h-14 px-4 border-b bg-background/80 backdrop-blur-md sticky top-0 z-10">
-          <h1 className="text-xl font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold text-primary">
             LingoDiary
           </h1>
         </header>
