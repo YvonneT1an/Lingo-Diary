@@ -1,0 +1,292 @@
+1. Scope
+Design the core user flow for a single user on one device, no login, focusing on:
+
+Write diary in Chinese → get casual American English
+
+Highlight English words/phrases → save to personal dictionary
+
+View and manage saved phrases
+
+Review saved phrases as simple flashcards
+
+No accounts, no complex SRS, no social features.
+
+2. Personas and Use Cases
+Primary persona
+Chinese-speaking professional, intermediate English.
+
+Can read most English but struggles to express casual, natural American English.
+
+Uses the product on mobile and laptop, mostly in the evening.
+
+Core use cases
+User writes a short diary in Chinese and sees a natural, casual American English version.
+
+User selects words/phrases from the English output and saves them with explanation and translation.
+
+User browses and edits a personal list of saved words/phrases.
+
+User reviews saved words/phrases in a simple flashcard mode.
+
+3. High-level IA (for screens in Figma)
+Screen A: Diary Write & Translate
+
+Modal A1: Save Phrase / Phrase Detail editor
+
+Screen B: My Dictionary (Phrase List)
+
+Screen C: Review (Flashcards)
+
+Shared: Navigation (bottom tabs or top nav)
+
+4. Screen A – Diary Write & Translate
+Goal
+Let the user write a diary in Chinese and receive a casual American English translation, then turn parts of the translation into learnable items.
+
+Functional requirements
+Chinese input area
+
+Large multiline text area.
+
+Placeholder: “用中文写下你今天发生了什么…”
+
+Character counter (e.g., “0 / 2000”).
+
+“Clear” icon/button to reset the input.
+
+Translate action
+
+Primary button “Translate to English”.
+
+State: disabled when Chinese input is empty.
+
+Loading state: spinner + label “Translating…”.
+
+Error state: inline error message if translation fails + “Try again” action.
+
+English output area
+
+Read-only multiline area showing translation result.
+
+Label: “Casual American English”.
+
+The text must be selectable and support text selection by gesture (drag / double-click, etc.).
+
+Empty state (before first translation): short explanation text, e.g. “Your English translation will appear here.”
+
+Highlight & Save phrase interaction
+
+When user selects text in the English output, show a small inline/floating action:
+
+Button: “Save phrase”
+
+Clicking “Save phrase” opens Modal A1 pre-filled with:
+
+Selected English text.
+
+Original Chinese sentence (if possible) or full diary content for context (non-editable or displayed as reference).
+
+Quick access to dictionary & review
+
+At top or bottom of the screen, show navigation to:
+
+“Write” (current)
+
+“Dictionary”
+
+“Review”
+
+5. Modal A1 – Save Phrase / Phrase Detail
+Goal
+Allow user to confirm and enrich a phrase they want to learn.
+
+Trigger
+Opened from Screen A when user clicks “Save phrase” on a selection.
+
+Functional requirements
+Basic layout
+
+Title: “Save phrase”.
+
+Close icon (X).
+
+Fields
+
+“English phrase” (required, editable text field)
+
+“Chinese meaning” (optional, text field; can be filled later manually)
+
+“Explanation / notes” (optional textarea; short explanation of usage, tone, nuance)
+
+“Source sentence / context” (read-only, shows original English sentence, or both Chinese + English context)
+
+Example usages (optional for MVP)
+
+For MVP, this can be a simple optional multiline field “Example sentences” where user can paste or type examples.
+
+You can visually reserve space for future “auto-generated examples”.
+
+Actions
+
+Primary button: “Save to dictionary”
+
+Secondary button: “Cancel” or close icon
+
+Validation:
+
+“English phrase” cannot be empty; show inline error message if user tries to save with empty phrase.
+
+Save behavior
+
+On success:
+
+Close modal
+
+Show small toast/snackbar: “Saved to dictionary”
+
+The phrase appears in Screen B – My Dictionary.
+
+6. Screen B – My Dictionary (Phrase List)
+Goal
+Show all saved phrases, allow user to search, view details, edit or delete.
+
+Functional requirements
+Header & navigation
+
+Title: “My Dictionary”.
+
+Back / navigation to other screens.
+
+Search & filter (simple for MVP)
+
+Search bar: placeholder “Search by English or Chinese…”.
+
+Filters for MVP can be omitted or a dummy “All phrases” label only.
+
+Phrase list
+Each row shows:
+
+Main: English phrase (bold).
+
+Secondary: Chinese meaning (if exists) or small “Add Chinese meaning” prompt.
+
+Optional small tag / pill showing when it was added (e.g. “Added 2 days ago”).
+
+Tap/click row → open phrase detail (reuse Modal A1, but in view/edit mode).
+
+Empty state:
+
+If no phrases:
+
+Icon/illustration.
+
+Text: “No saved phrases yet.”
+
+Button: “Write a diary and save your first phrase” → navigates to Screen A.
+
+Phrase detail from list
+
+When user opens a phrase from the list:
+
+Same layout as Modal A1, but with:
+
+Title “Edit phrase”
+
+Actions: “Save changes” + “Delete phrase”.
+
+Delete confirmation dialog: “Delete this phrase? This cannot be undone.” with “Cancel” and “Delete” options.
+
+7. Screen C – Review (Flashcards)
+Goal
+Help user review saved phrases as flashcards to strengthen memory.
+
+Functional requirements
+Entry point
+
+From navigation: “Review”.
+
+From Screen B: button “Review phrases” which leads here.
+
+Flashcard structure
+Card front:
+
+Show one prompt per phrase, e.g.:
+
+Chinese meaning (if available), OR
+
+Example context sentence with a blank, e.g. “Let’s ____ a coffee after work.”
+
+Show phrase count/progress at top: “3 of 10”.
+
+Button: “Show answer”.
+
+Card back (after “Show answer”):
+
+Show English phrase (large).
+
+Show Chinese meaning (smaller, below).
+
+Show explanation/notes if available.
+
+Show any example sentence(s) if available.
+
+Difficulty rating (simple)
+
+On card back, show 3 buttons:
+
+“Hard”
+
+“OK”
+
+“Easy”
+
+Clicking any difficulty moves to the next card.
+
+At end of all cards for this session, show completion state.
+
+Session behavior (MVP simplified)
+
+For MVP:
+
+All phrases are reviewable; or
+
+Only a subset (e.g. “phrases added in last 7 days”).
+
+At session start:
+
+If no phrases: show empty state message:
+
+“No phrases to review yet. Save some phrases from your diary first.”
+
+End of session
+
+When all phrases in session are done:
+
+Show “You’ve reviewed X phrases today.”
+
+Button: “Back to dictionary” or “Write a new diary”.
+
+8. Navigation & Layout Requirements
+Global navigation:
+
+Mobile: bottom tab bar with icons + labels: “Write”, “Dictionary”, “Review”.
+
+Desktop: top nav bar or left sidebar with the same 3 sections.
+
+All screens must be responsive:
+
+Mobile first: 360–414 width.
+
+Desktop: center column layout, max width ~960px.
+
+9. States to Design (important for realistic mockups)
+For each main screen, design:
+
+Default state
+
+Loading state (translation in progress, saving phrase, etc.)
+
+Empty state (no phrases, no review items)
+
+Error state (translation failed, save failed – copy can be generic for now)
+
