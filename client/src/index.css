@@ -30,74 +30,74 @@
 }
 
 :root {
-  /* Colors - Pink (#fbb1c5) & Yellow theme */
+  /* Colors - #d64a17, Baby Blue #90cce5, Forest Green #004d3a, Yellow Green #c8bd00 */
   --background: 0 0% 100%; /* Pure white */
-  --foreground: 344 30% 15%; /* Deep pinkish dark */
+  --foreground: 165 100% 15%; /* Forest Green */
   
   --card: 0 0% 100%;
-  --card-foreground: 344 30% 15%;
+  --card-foreground: 165 100% 15%; /* Forest Green */
   
   --popover: 0 0% 100%;
-  --popover-foreground: 344 30% 15%;
+  --popover-foreground: 165 100% 15%; /* Forest Green */
   
-  --primary: 344 90% 84%; /* #fbb1c5 */
-  --primary-foreground: 344 60% 20%; /* Dark text for contrast on light pink */
+  --primary: 16 80% 46%; /* #d64a17 */
+  --primary-foreground: 0 0% 100%; /* White */
   
-  --secondary: 344 30% 96%; /* Very pale pink */
-  --secondary-foreground: 344 50% 20%;
+  --secondary: 198 62% 73%; /* Baby Blue #90cce5 */
+  --secondary-foreground: 165 100% 15%; /* Forest Green */
   
-  --muted: 344 20% 96%;
-  --muted-foreground: 344 15% 45%;
+  --muted: 198 30% 92%; /* Lightened Baby Blue */
+  --muted-foreground: 165 40% 40%; /* Lighter Forest Green */
   
-  --accent: 45 93% 65%; /* Soft yellow */
-  --accent-foreground: 45 60% 20%;
+  --accent: 57 100% 39%; /* Yellow Green #c8bd00 */
+  --accent-foreground: 165 100% 15%; /* Forest Green */
   
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
   
-  --border: 344 30% 90%;
-  --input: 344 30% 90%;
-  --ring: 344 90% 84%;
+  --border: 198 40% 85%; /* Soft Baby Blue border */
+  --input: 198 40% 85%;
+  --ring: 16 80% 46%; /* #d64a17 */
   
   --radius: 1.2rem;
   
   --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
   
   /* Softer shadows for cards */
-  --shadow-sm: 0 2px 4px 0 rgb(251 177 197 / 0.15);
-  --shadow: 0 4px 8px -1px rgb(251 177 197 / 0.15), 0 2px 4px -2px rgb(251 177 197 / 0.1);
-  --shadow-md: 0 10px 15px -3px rgb(251 177 197 / 0.15), 0 4px 6px -4px rgb(251 177 197 / 0.1);
-  --shadow-lg: 0 20px 25px -5px rgb(251 177 197 / 0.15), 0 8px 10px -6px rgb(251 177 197 / 0.1);
+  --shadow-sm: 0 2px 4px 0 rgb(0 77 58 / 0.05);
+  --shadow: 0 4px 8px -1px rgb(0 77 58 / 0.05), 0 2px 4px -2px rgb(0 77 58 / 0.05);
+  --shadow-md: 0 10px 15px -3px rgb(0 77 58 / 0.08), 0 4px 6px -4px rgb(0 77 58 / 0.05);
+  --shadow-lg: 0 20px 25px -5px rgb(0 77 58 / 0.08), 0 8px 10px -6px rgb(0 77 58 / 0.05);
 }
 
 .dark {
-  --background: 344 30% 10%;
-  --foreground: 344 20% 90%;
+  --background: 165 100% 10%; /* Very dark Forest Green */
+  --foreground: 0 0% 100%; /* White */
   
-  --card: 344 30% 12%;
-  --card-foreground: 344 20% 90%;
+  --card: 165 100% 12%;
+  --card-foreground: 0 0% 100%;
   
-  --popover: 344 30% 12%;
-  --popover-foreground: 344 20% 90%;
+  --popover: 165 100% 12%;
+  --popover-foreground: 0 0% 100%;
   
-  --primary: 344 90% 84%; /* #fbb1c5 */
-  --primary-foreground: 344 50% 20%;
+  --primary: 16 80% 46%; /* #d64a17 */
+  --primary-foreground: 0 0% 100%;
   
-  --secondary: 344 20% 18%;
-  --secondary-foreground: 344 20% 90%;
+  --secondary: 165 50% 20%;
+  --secondary-foreground: 198 62% 73%; /* Baby Blue */
   
-  --muted: 344 20% 18%;
-  --muted-foreground: 344 15% 65%;
+  --muted: 165 50% 20%;
+  --muted-foreground: 165 20% 65%;
   
-  --accent: 45 93% 65%; /* Soft yellow */
-  --accent-foreground: 45 60% 20%;
+  --accent: 57 100% 39%; /* Yellow Green #c8bd00 */
+  --accent-foreground: 165 100% 10%;
   
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
   
-  --border: 344 20% 20%;
-  --input: 344 20% 20%;
-  --ring: 344 90% 84%;
+  --border: 165 50% 25%;
+  --input: 165 50% 25%;
+  --ring: 16 80% 46%;
 }
 
 @layer base {
