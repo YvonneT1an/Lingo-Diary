@@ -1,45 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { RefreshCw, Check, Sparkles, X, Plus, Calendar } from "lucide-react";
+import { RefreshCw, Check, Sparkles, X, Plus } from "lucide-react";
 import PhraseModal from "@/components/PhraseModal";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday } from "date-fns";
-
-// Mock data for streak
-// Array of dates where the user wrote a diary
-const MOCK_STREAK_DATES = [
-  new Date(2026, 2, 1),
-  new Date(2026, 2, 2),
-  new Date(2026, 2, 3),
-  // new Date(2026, 2, 4), // missed
-  new Date(2026, 2, 5),
-  new Date(2026, 2, 6),
-  new Date(2026, 2, 7),
-  new Date(2026, 2, 8),
-  new Date(2026, 2, 9),
-  new Date(2026, 2, 10),
-  new Date(2026, 2, 11),
-  new Date(2026, 2, 12),
-  // new Date(2026, 2, 13), // missed
-  new Date(2026, 2, 14),
-  new Date(2026, 2, 15),
-  new Date(2026, 2, 16),
-  new Date(2026, 2, 17),
-  new Date(2026, 2, 18),
-  new Date(2026, 2, 19),
-  new Date(2026, 2, 20),
-  new Date(2026, 2, 21),
-  new Date(2026, 2, 22),
-  // new Date(2026, 2, 23), // missed
-  new Date(2026, 2, 24),
-  new Date(2026, 2, 25),
-  new Date(2026, 2, 26),
-  new Date(2026, 2, 27),
-  new Date(2026, 2, 28),
-  new Date(2026, 2, 29),
-  // new Date(2026, 2, 30), // missed
-  // new Date(2026, 2, 31), // missed
-].map(d => d.toDateString());
 
 export default function WritePage() {
   const [chineseInput, setChineseInput] = useState("");
@@ -53,13 +16,6 @@ export default function WritePage() {
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Calendar calculations
-  const currentDate = new Date(2026, 2, 1); // Mock date to match March 2026 for the UI
-  const daysInMonth = eachDayOfInterval({
-    start: startOfMonth(currentDate),
-    end: endOfMonth(currentDate)
-  });
 
   const handleTranslate = () => {
     if (!chineseInput.trim()) return;
@@ -104,39 +60,9 @@ export default function WritePage() {
 
   return (
     <div className="p-4 md:p-8 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">Write & Translate</h1>
-          <p className="text-muted-foreground">Turn your daily thoughts into natural American English.</p>
-        </div>
-
-        {/* Streak Component */}
-        <div className="flex flex-col gap-2 shrink-0">
-          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <Calendar className="w-4 h-4" />
-            <span>{format(currentDate, 'MMMM yyyy')}</span>
-          </div>
-          <div className="flex gap-1.5 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0 scrollbar-hide">
-            {daysInMonth.map((date, i) => {
-              const isWrote = MOCK_STREAK_DATES.includes(date.toDateString());
-              const isPast = date < new Date(2026, 2, 28); // Mocking current day
-              
-              return (
-                <div 
-                  key={i}
-                  className={`w-3.5 h-10 rounded-full shrink-0 shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)] transition-colors duration-300 ${
-                    isWrote 
-                      ? 'bg-[#4ade80]' // Bright green for success
-                      : isPast 
-                        ? 'bg-[#ef4444]' // Red for missed
-                        : 'bg-secondary' // Gray/Neutral for future
-                  }`}
-                  title={format(date, 'MMM d')}
-                />
-              )
-            })}
-          </div>
-        </div>
+      <div className="mb-6 md:mb-10">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">Write & Translate</h1>
+        <p className="text-muted-foreground">Turn your daily thoughts into natural American English.</p>
       </div>
 
       <div className="space-y-6">
