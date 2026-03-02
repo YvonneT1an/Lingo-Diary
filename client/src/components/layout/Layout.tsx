@@ -31,16 +31,18 @@ export default function Layout({ children }: LayoutProps) {
             const isActive = location === item.href;
             
             return (
-              <Link key={item.href} href={item.href}>
-                <a className={cn(
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200",
                   isActive 
                     ? "bg-primary text-primary-foreground font-medium shadow-sm shadow-primary/20" 
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                )}>
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </a>
+                )}
+              >
+                <Icon className="w-4 h-4" />
+                <span>{item.label}</span>
               </Link>
             );
           })}
@@ -69,19 +71,21 @@ export default function Layout({ children }: LayoutProps) {
             const isActive = location === item.href;
             
             return (
-              <Link key={item.href} href={item.href}>
-                <a className={cn(
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
                   "flex flex-col items-center justify-center w-full h-full gap-1 transition-colors",
                   isActive ? "text-primary" : "text-muted-foreground"
+                )}
+              >
+                <div className={cn(
+                  "p-1.5 rounded-full transition-all duration-200",
+                  isActive && "bg-primary/20"
                 )}>
-                  <div className={cn(
-                    "p-1.5 rounded-full transition-all duration-200",
-                    isActive && "bg-primary/20 text-primary-foreground"
-                  )}>
-                    <Icon className={cn("w-5 h-5", isActive && "text-primary")} />
-                  </div>
-                  <span className="text-[10px] font-medium">{item.label}</span>
-                </a>
+                  <Icon className={cn("w-5 h-5", isActive && "text-primary")} />
+                </div>
+                <span className="text-[10px] font-medium">{item.label}</span>
               </Link>
             );
           })}

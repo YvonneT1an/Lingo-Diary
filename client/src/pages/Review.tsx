@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Sparkles, BookOpen } from "lucide-react";
+import { Sparkles, BookOpen, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePhrases } from "@/context/PhraseContext";
 import { cn } from "@/lib/utils";
@@ -8,41 +8,41 @@ import { cn } from "@/lib/utils";
 type Difficulty = 'hard' | 'ok' | 'easy';
 
 export default function ReviewPage() {
-  const { phrases } = usePhrases();
-  
+  const { phrases, isLoading } = usePhrases();
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [reviewedCount, setReviewedCount] = useState(0);
-  
-  // For MVP, randomly shuffle all phrases
-  const [reviewQueue, setReviewQueue] = useState([...phrases].sort(() => 0.5 - Math.random()));
 
-  useEffect(() => {
-    // Reset when phrases change (if coming from empty state)
-    if (reviewQueue.length === 0 && phrases.length > 0) {
-      setReviewQueue([...phrases].sort(() => 0.5 - Math.random()));
-    }
+  const reviewQueue = useMemo(() => {
+    return [...phrases].sort(() => 0.5 - Math.random());
   }, [phrases]);
 
   const handleShowAnswer = () => {
     setIsFlipped(true);
   };
 
-  const handleNext = (difficulty: Difficulty) => {
-    // In a real app, difficulty would be saved to SRS algorithm here
-    
+  const handleNext = (_difficulty: Difficulty) => {
     setIsFlipped(false);
     setReviewedCount(prev => prev + 1);
-    
+
     setTimeout(() => {
       if (currentIndex < reviewQueue.length - 1) {
         setCurrentIndex(prev => prev + 1);
       } else {
         setSessionComplete(true);
       }
-    }, 150); // Small delay to allow flip animation to start
+    }, 150);
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-4 md:p-8 max-w-3xl mx-auto h-full flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (phrases.length === 0) {
     return (
@@ -55,7 +55,7 @@ export default function ReviewPage() {
           Save some phrases from your diary translations first, then come back here to practice them.
         </p>
         <Link href="/">
-          <Button size="lg" className="rounded-xl shadow-md shadow-primary/20 px-8">
+          <Button size="lg" className="rounded-xl shadow-md shadow-primary/20 px-8" data-testid="button-write-diary">
             Write a diary
           </Button>
         </Link>
@@ -94,27 +94,26 @@ export default function ReviewPage() {
   return (
     <div className="p-4 md:p-8 max-w-xl mx-auto h-[calc(100vh-4rem)] md:h-[calc(100vh-8rem)] flex flex-col">
       <div className="flex items-center justify-between mb-6 shrink-0">
-        <div className="font-medium text-muted-foreground text-sm bg-secondary px-3 py-1 rounded-full">
+        <div className="font-medium text-muted-foreground text-sm bg-secondary px-3 py-1 rounded-full" data-testid="text-card-progress">
           Card {currentIndex + 1} <span className="opacity-50">/</span> {reviewQueue.length}
         </div>
         <Link href="/dictionary">
-          <Button variant="ghost" size="sm" className="rounded-lg text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" size="sm" className="rounded-lg text-muted-foreground hover:text-foreground" data-testid="button-exit-review">
             Exit
           </Button>
         </Link>
       </div>
 
       <div className="flex-1 relative perspective-1000 mb-8 min-h-[300px]">
-        {/* Flashcard Container - Handles 3D Flip */}
         <div className={cn(
           "w-full h-full absolute top-0 left-0 transition-all duration-500 transform-style-preserve-3d",
           isFlipped ? "rotate-y-180" : ""
         )}>
-          
-          {/* FRONT OF CARD */}
+
+          {/* FRONT */}
           <div className="w-full h-full absolute top-0 left-0 backface-hidden bg-card border border-border shadow-md rounded-3xl p-8 flex flex-col">
             <div className="text-xs uppercase tracking-wider font-bold text-primary/70 mb-auto">Prompt</div>
-            
+
             <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 my-8">
               {currentPhrase?.chinese ? (
                 <>
@@ -132,29 +131,30 @@ export default function ReviewPage() {
                 <h3 className="text-2xl font-medium text-muted-foreground">What's the phrase?</h3>
               )}
             </div>
-            
+
             <div className="mt-auto pt-6 w-full flex justify-center">
-              <Button 
+              <Button
                 onClick={handleShowAnswer}
-                size="lg" 
+                size="lg"
                 className="w-full sm:w-2/3 rounded-xl shadow-md shadow-primary/20 h-14 text-base"
+                data-testid="button-show-answer"
               >
                 Show Answer
               </Button>
             </div>
           </div>
 
-          {/* BACK OF CARD */}
+          {/* BACK */}
           <div className="w-full h-full absolute top-0 left-0 backface-hidden rotate-y-180 bg-card border border-border shadow-lg shadow-primary/5 rounded-3xl p-6 md:p-8 flex flex-col overflow-y-auto">
             <div className="text-xs uppercase tracking-wider font-bold text-primary/70 mb-6 shrink-0">Answer</div>
-            
+
             <div className="flex flex-col items-center text-center mb-8 shrink-0">
-              <h3 className="text-3xl md:text-4xl font-bold text-primary mb-3 leading-tight">{currentPhrase?.english}</h3>
+              <h3 className="text-3xl md:text-4xl font-bold text-primary mb-3 leading-tight" data-testid="text-answer-english">{currentPhrase?.english}</h3>
               {currentPhrase?.chinese && (
                 <p className="text-xl font-medium text-foreground/80">{currentPhrase.chinese}</p>
               )}
             </div>
-            
+
             <div className="space-y-5 text-left mb-8 flex-1">
               {currentPhrase?.explanation && (
                 <div className="bg-secondary/30 p-4 rounded-2xl">
@@ -162,7 +162,7 @@ export default function ReviewPage() {
                   <p className="text-sm md:text-base">{currentPhrase.explanation}</p>
                 </div>
               )}
-              
+
               {currentPhrase?.examples && (
                 <div className="bg-secondary/30 p-4 rounded-2xl">
                   <div className="text-xs font-bold text-muted-foreground mb-1 uppercase tracking-wider">Example</div>
@@ -174,38 +174,39 @@ export default function ReviewPage() {
         </div>
       </div>
 
-      {/* Difficulty Buttons (only shown when flipped) */}
       <div className={cn(
         "shrink-0 transition-all duration-300 transform",
         isFlipped ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
       )}>
         <p className="text-center text-sm font-medium text-muted-foreground mb-3">How was this?</p>
         <div className="grid grid-cols-3 gap-3">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => handleNext('hard')}
             className="h-14 rounded-xl border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-800 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-900/30"
+            data-testid="button-difficulty-hard"
           >
             Hard
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => handleNext('ok')}
             className="h-14 rounded-xl border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-900 dark:text-blue-400 dark:hover:bg-blue-900/30"
+            data-testid="button-difficulty-ok"
           >
             Good
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => handleNext('easy')}
             className="h-14 rounded-xl border-green-200 text-green-700 hover:bg-green-50 hover:text-green-800 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-900/30"
+            data-testid="button-difficulty-easy"
           >
             Easy
           </Button>
         </div>
       </div>
 
-      {/* Adding custom utility for 3D transforms since it's not standard Tailwind */}
       <style dangerouslySetInnerHTML={{__html: `
         .perspective-1000 { perspective: 1000px; }
         .transform-style-preserve-3d { transform-style: preserve-3d; }

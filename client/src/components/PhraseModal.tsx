@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { usePhrases, Phrase } from "@/context/PhraseContext";
+import { usePhrases, type Phrase } from "@/context/PhraseContext";
 import { useToast } from "@/hooks/use-toast";
+import { Trash2 } from "lucide-react";
 
 interface PhraseModalProps {
   isOpen: boolean;
@@ -19,50 +20,61 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
   const { addPhrase, updatePhrase, deletePhrase } = usePhrases();
   const { toast } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
-      english: initialData?.english || "",
-      chinese: initialData?.chinese || "",
-      explanation: initialData?.explanation || "",
-      context: initialData?.context || "",
-      examples: initialData?.examples || "",
+      english: "",
+      chinese: "",
+      explanation: "",
+      context: "",
+      examples: "",
     }
   });
 
-  // Update form when initialData changes
-  useState(() => {
+  useEffect(() => {
     if (isOpen && initialData) {
-      reset(initialData);
+      reset({
+        english: initialData.english || "",
+        chinese: initialData.chinese || "",
+        explanation: initialData.explanation || "",
+        context: initialData.context || "",
+        examples: initialData.examples || "",
+      });
     }
-  });
+    if (isOpen) {
+      setIsDeleting(false);
+    }
+  }, [isOpen, initialData, reset]);
 
-  const onSubmit = (data: any) => {
-    if (isEdit && initialData?.id) {
-      updatePhrase(initialData.id, data);
-      toast({
-        title: "Phrase updated",
-        description: "Your changes have been saved.",
-      });
-    } else {
-      addPhrase(data);
-      toast({
-        title: "Saved to dictionary",
-        description: `"${data.english}" has been added to your dictionary.`,
-      });
+  const onSubmit = async (data: any) => {
+    setIsSaving(true);
+    try {
+      if (isEdit && initialData?.id) {
+        await updatePhrase(initialData.id, data);
+        toast({ title: "Phrase updated", description: "Your changes have been saved." });
+      } else {
+        await addPhrase(data);
+        toast({ title: "Saved to dictionary", description: `"${data.english}" has been added.` });
+      }
+      onOpenChange(false);
+      reset();
+    } catch {
+      toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
+    } finally {
+      setIsSaving(false);
     }
-    onOpenChange(false);
-    reset();
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (initialData?.id) {
-      deletePhrase(initialData.id);
-      toast({
-        title: "Phrase deleted",
-        variant: "destructive",
-      });
-      onOpenChange(false);
+      try {
+        await deletePhrase(initialData.id);
+        toast({ title: "Phrase deleted", variant: "destructive" });
+        onOpenChange(false);
+      } catch {
+        toast({ title: "Error", description: "Failed to delete. Please try again.", variant: "destructive" });
+      }
     }
   };
 
@@ -79,7 +91,7 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
           {isDeleting ? (
             <div className="py-6 flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-200">
               <div className="w-12 h-12 rounded-full bg-destructive/10 text-destructive flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                <Trash2 className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-semibold mb-2">Delete this phrase?</h3>
               <p className="text-muted-foreground text-sm mb-6">
@@ -100,6 +112,7 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
                 <Label htmlFor="english" className="text-sm font-medium">English phrase <span className="text-destructive">*</span></Label>
                 <Input
                   id="english"
+                  data-testid="input-english"
                   placeholder="e.g. piece of cake"
                   className={`rounded-xl bg-secondary/50 border-transparent focus-visible:bg-background ${errors.english ? 'border-destructive focus-visible:ring-destructive' : ''}`}
                   {...register("english", { required: "English phrase is required" })}
@@ -113,6 +126,7 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
                 <Label htmlFor="chinese" className="text-sm font-medium">Chinese meaning <span className="text-muted-foreground font-normal">(Optional)</span></Label>
                 <Input
                   id="chinese"
+                  data-testid="input-chinese"
                   placeholder="e.g. 小菜一碟"
                   className="rounded-xl bg-secondary/50 border-transparent focus-visible:bg-background"
                   {...register("chinese")}
@@ -123,6 +137,7 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
                 <Label htmlFor="explanation" className="text-sm font-medium">Explanation / notes <span className="text-muted-foreground font-normal">(Optional)</span></Label>
                 <Textarea
                   id="explanation"
+                  data-testid="input-explanation"
                   placeholder="Short explanation of usage, tone, nuance..."
                   className="min-h-[80px] rounded-xl bg-secondary/50 border-transparent focus-visible:bg-background resize-none"
                   {...register("explanation")}
@@ -131,7 +146,7 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
 
               <div className="space-y-2">
                 <Label htmlFor="context" className="text-sm font-medium">Source context <span className="text-muted-foreground font-normal">(Read-only)</span></Label>
-                <div className="p-3 bg-secondary/50 rounded-xl text-sm text-muted-foreground border border-border/40">
+                <div className="p-3 bg-secondary/50 rounded-xl text-sm text-muted-foreground border border-border/40 max-h-[100px] overflow-y-auto">
                   {initialData?.context || "No context provided"}
                 </div>
                 <input type="hidden" {...register("context")} />
@@ -141,6 +156,7 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
                 <Label htmlFor="examples" className="text-sm font-medium">Example sentences <span className="text-muted-foreground font-normal">(Optional)</span></Label>
                 <Textarea
                   id="examples"
+                  data-testid="input-examples"
                   placeholder="Add examples of how to use it..."
                   className="min-h-[80px] rounded-xl bg-secondary/50 border-transparent focus-visible:bg-background resize-none"
                   {...register("examples")}
@@ -158,6 +174,7 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
                 variant="ghost"
                 className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-xl px-4"
                 onClick={() => setIsDeleting(true)}
+                data-testid="button-delete-phrase"
               >
                 Delete
               </Button>
@@ -166,8 +183,14 @@ export default function PhraseModal({ isOpen, onOpenChange, initialData, isEdit 
                 <Button variant="ghost" className="rounded-xl">Cancel</Button>
               </DialogClose>
             )}
-            <Button type="submit" form="phrase-form" className="rounded-xl shadow-md shadow-primary/20 w-full sm:w-auto">
-              {isEdit ? "Save changes" : "Save to dictionary"}
+            <Button
+              type="submit"
+              form="phrase-form"
+              disabled={isSaving}
+              className="rounded-xl shadow-md shadow-primary/20 w-full sm:w-auto"
+              data-testid="button-save-phrase"
+            >
+              {isSaving ? "Saving..." : isEdit ? "Save changes" : "Save to dictionary"}
             </Button>
           </DialogFooter>
         )}
