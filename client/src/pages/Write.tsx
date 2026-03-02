@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { RefreshCw, Check, Sparkles, X, Plus } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { RefreshCw, Sparkles, X, Plus, Flame } from "lucide-react";
 import PhraseModal from "@/components/PhraseModal";
 
 export default function WritePage() {
@@ -16,6 +17,14 @@ export default function WritePage() {
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Mock streak dates (last 4 days including today)
+  const [streakDates] = useState<Date[]>([
+    new Date(),
+    new Date(new Date().setDate(new Date().getDate() - 1)),
+    new Date(new Date().setDate(new Date().getDate() - 2)),
+    new Date(new Date().setDate(new Date().getDate() - 3)),
+  ]);
 
   const handleTranslate = () => {
     if (!chineseInput.trim()) return;
@@ -59,118 +68,161 @@ export default function WritePage() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-6 md:mb-10">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">Write & Translate</h1>
-        <p className="text-muted-foreground">Turn your daily thoughts into natural American English.</p>
-      </div>
+    <div className="p-4 md:p-8 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Main Content Area */}
+        <div className="flex-1 space-y-6">
+          <div className="mb-2 md:mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">Write & Translate</h1>
+            <p className="text-muted-foreground">Turn your daily thoughts into natural American English.</p>
+          </div>
 
-      <div className="space-y-6">
-        {/* Input Area */}
-        <div className="relative group">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl -z-10 blur-xl transition-all group-focus-within:opacity-100 opacity-0 duration-500" />
-          
-          <div className="bg-card border border-border/50 rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all duration-300 focus-within:ring-1 focus-within:ring-primary/30 focus-within:border-primary/30">
-            <div className="flex items-center justify-between px-4 py-3 bg-secondary/30 border-b border-border/40">
-              <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-blue-400" />
-                Chinese Draft
-              </span>
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-muted-foreground font-mono">
-                  {chineseInput.length} / 2000
+          {/* Input Area */}
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl -z-10 blur-xl transition-all group-focus-within:opacity-100 opacity-0 duration-500" />
+            
+            <div className="bg-card border border-border/50 rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all duration-300 focus-within:ring-1 focus-within:ring-primary/30 focus-within:border-primary/30">
+              <div className="flex items-center justify-between px-4 py-3 bg-secondary/30 border-b border-border/40">
+                <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-400" />
+                  Chinese Draft
                 </span>
-                {chineseInput.length > 0 && (
-                  <button 
-                    onClick={handleClear}
-                    className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-secondary"
-                    title="Clear text"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-muted-foreground font-mono">
+                    {chineseInput.length} / 2000
+                  </span>
+                  {chineseInput.length > 0 && (
+                    <button 
+                      onClick={handleClear}
+                      className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-secondary"
+                      title="Clear text"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+              
+              <Textarea 
+                value={chineseInput}
+                onChange={(e) => setChineseInput(e.target.value)}
+                placeholder="用中文写下你今天发生了什么… (Write down what happened today in Chinese...)"
+                className="min-h-[160px] border-0 focus-visible:ring-0 rounded-none bg-transparent resize-y text-base p-4 leading-relaxed"
+                maxLength={2000}
+              />
+              
+              <div className="p-3 bg-card border-t border-border/40 flex justify-end">
+                <Button 
+                  onClick={handleTranslate}
+                  disabled={!chineseInput.trim() || isTranslating}
+                  className="rounded-xl shadow-sm shadow-primary/20 gap-2 font-medium"
+                >
+                  {isTranslating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      Translating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      Translate to English
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
+          </div>
+
+          {/* Output Area */}
+          {translation ? (
+            <div className="relative animate-in slide-in-from-top-4 fade-in duration-500">
+              <div className="bg-primary/5 border border-primary/20 rounded-2xl shadow-sm overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-primary/10 bg-primary/5">
+                  <span className="text-sm font-medium text-primary flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-primary" />
+                    Casual American English
+                  </span>
+                  <span className="text-xs text-primary/70 bg-primary/10 px-2 py-1 rounded-md font-medium">
+                    Select text to save
+                  </span>
+                </div>
+                
+                <div 
+                  className="p-5 text-lg leading-relaxed text-foreground min-h-[120px] selection:bg-primary/30"
+                  onMouseUp={handleSelection}
+                  onTouchEnd={handleSelection}
+                >
+                  {translation}
+                </div>
+              </div>
+
+              {/* Floating Action Button for selection */}
+              {showSaveAction && (
+                <div 
+                  className="fixed z-50 animate-in zoom-in-95 duration-200"
+                  style={{ top: actionPosition.top, left: Math.max(10, actionPosition.left) }}
+                >
+                  <Button 
+                    size="sm" 
+                    onClick={handleSaveClick}
+                    className="rounded-full shadow-lg shadow-black/10 flex items-center gap-1.5 px-4 h-10 border border-primary/20 bg-background hover:bg-secondary text-foreground"
+                  >
+                    <Plus className="w-4 h-4 text-primary" />
+                    <span className="font-medium">Save phrase</span>
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-secondary/30 border border-dashed border-border rounded-2xl p-8 flex flex-col items-center justify-center text-center text-muted-foreground min-h-[200px]">
+              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mb-4">
+                <Sparkles className="w-6 h-6 text-muted-foreground/50" />
+              </div>
+              <p>Your English translation will appear here.</p>
+              <p className="text-sm mt-1 opacity-70">Highlight any phrase in the translation to save it.</p>
+            </div>
+          )}
+        </div>
+        
+        {/* Right Sidebar - Streak & Calendar */}
+        <div className="w-full md:w-80 shrink-0 space-y-6">
+          <div className="bg-card border border-border/50 rounded-2xl shadow-sm p-5 overflow-hidden relative">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Flame className="w-24 h-24 text-orange-500" />
+            </div>
             
-            <Textarea 
-              value={chineseInput}
-              onChange={(e) => setChineseInput(e.target.value)}
-              placeholder="用中文写下你今天发生了什么… (Write down what happened today in Chinese...)"
-              className="min-h-[160px] border-0 focus-visible:ring-0 rounded-none bg-transparent resize-y text-base p-4 leading-relaxed"
-              maxLength={2000}
-            />
-            
-            <div className="p-3 bg-card border-t border-border/40 flex justify-end">
-              <Button 
-                onClick={handleTranslate}
-                disabled={!chineseInput.trim() || isTranslating}
-                className="rounded-xl shadow-sm shadow-primary/20 gap-2 font-medium"
-              >
-                {isTranslating ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    Translating...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4" />
-                    Translate to English
-                  </>
-                )}
-              </Button>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center">
+                  <Flame className="w-4 h-4 text-orange-500" />
+                </div>
+                <h3 className="font-semibold text-lg">Your Streak</h3>
+              </div>
+              <div className="flex items-baseline gap-2 mb-4">
+                <span className="text-4xl font-bold text-foreground">4</span>
+                <span className="text-muted-foreground font-medium">days</span>
+              </div>
+              
+              <div className="bg-secondary/30 rounded-xl p-2 flex justify-center border border-border/40">
+                <Calendar 
+                  mode="multiple"
+                  selected={streakDates}
+                  className="bg-transparent pointer-events-none"
+                  modifiers={{
+                    streak: streakDates
+                  }}
+                  modifiersStyles={{
+                    streak: {
+                      backgroundColor: 'hsl(var(--primary) / 0.15)',
+                      color: 'hsl(var(--primary))',
+                      fontWeight: 'bold'
+                    }
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Output Area */}
-        {translation ? (
-          <div className="relative animate-in slide-in-from-top-4 fade-in duration-500">
-            <div className="bg-primary/5 border border-primary/20 rounded-2xl shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-primary/10 bg-primary/5">
-                <span className="text-sm font-medium text-primary flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-primary" />
-                  Casual American English
-                </span>
-                <span className="text-xs text-primary/70 bg-primary/10 px-2 py-1 rounded-md font-medium">
-                  Select text to save
-                </span>
-              </div>
-              
-              <div 
-                className="p-5 text-lg leading-relaxed text-foreground min-h-[120px] selection:bg-primary/30"
-                onMouseUp={handleSelection}
-                onTouchEnd={handleSelection}
-              >
-                {translation}
-              </div>
-            </div>
-
-            {/* Floating Action Button for selection */}
-            {showSaveAction && (
-              <div 
-                className="fixed z-50 animate-in zoom-in-95 duration-200"
-                style={{ top: actionPosition.top, left: Math.max(10, actionPosition.left) }}
-              >
-                <Button 
-                  size="sm" 
-                  onClick={handleSaveClick}
-                  className="rounded-full shadow-lg shadow-black/10 flex items-center gap-1.5 px-4 h-10 border border-primary/20 bg-background hover:bg-secondary text-foreground"
-                >
-                  <Plus className="w-4 h-4 text-primary" />
-                  <span className="font-medium">Save phrase</span>
-                </Button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="bg-secondary/30 border border-dashed border-border rounded-2xl p-8 flex flex-col items-center justify-center text-center text-muted-foreground min-h-[200px]">
-            <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mb-4">
-              <Sparkles className="w-6 h-6 text-muted-foreground/50" />
-            </div>
-            <p>Your English translation will appear here.</p>
-            <p className="text-sm mt-1 opacity-70">Highlight any phrase in the translation to save it.</p>
-          </div>
-        )}
       </div>
 
       <PhraseModal 
