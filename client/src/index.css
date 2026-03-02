@@ -30,74 +30,74 @@
 }
 
 :root {
-  /* Colors - Soft, clean aesthetic. Indigo primary. */
-  --background: 210 20% 98%; /* f8fafc */
-  --foreground: 222 47% 11%;
+  /* Colors - Pink (#fbb1c5) & Yellow theme */
+  --background: 0 0% 100%; /* Pure white */
+  --foreground: 344 30% 15%; /* Deep pinkish dark */
   
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 344 30% 15%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
+  --popover-foreground: 344 30% 15%;
   
-  --primary: 243 75% 59%; /* Indigo 500 */
-  --primary-foreground: 210 40% 98%;
+  --primary: 344 90% 84%; /* #fbb1c5 */
+  --primary-foreground: 344 60% 20%; /* Dark text for contrast on light pink */
   
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222 47% 11.2%;
+  --secondary: 344 30% 96%; /* Very pale pink */
+  --secondary-foreground: 344 50% 20%;
   
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
+  --muted: 344 20% 96%;
+  --muted-foreground: 344 15% 45%;
   
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222 47% 11.2%;
+  --accent: 45 93% 65%; /* Soft yellow */
+  --accent-foreground: 45 60% 20%;
   
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
   
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 243 75% 59%;
+  --border: 344 30% 90%;
+  --input: 344 30% 90%;
+  --ring: 344 90% 84%;
   
-  --radius: 1rem;
+  --radius: 1.2rem;
   
   --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
   
   /* Softer shadows for cards */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 2px 4px 0 rgb(251 177 197 / 0.15);
+  --shadow: 0 4px 8px -1px rgb(251 177 197 / 0.15), 0 2px 4px -2px rgb(251 177 197 / 0.1);
+  --shadow-md: 0 10px 15px -3px rgb(251 177 197 / 0.15), 0 4px 6px -4px rgb(251 177 197 / 0.1);
+  --shadow-lg: 0 20px 25px -5px rgb(251 177 197 / 0.15), 0 8px 10px -6px rgb(251 177 197 / 0.1);
 }
 
 .dark {
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
+  --background: 344 30% 10%;
+  --foreground: 344 20% 90%;
   
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
+  --card: 344 30% 12%;
+  --card-foreground: 344 20% 90%;
   
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 344 30% 12%;
+  --popover-foreground: 344 20% 90%;
   
-  --primary: 243 75% 59%;
-  --primary-foreground: 222 47% 11.2%;
+  --primary: 344 90% 84%; /* #fbb1c5 */
+  --primary-foreground: 344 50% 20%;
   
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 344 20% 18%;
+  --secondary-foreground: 344 20% 90%;
   
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
+  --muted: 344 20% 18%;
+  --muted-foreground: 344 15% 65%;
   
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --accent: 45 93% 65%; /* Soft yellow */
+  --accent-foreground: 45 60% 20%;
   
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
   
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 243 75% 59%;
+  --border: 344 20% 20%;
+  --input: 344 20% 20%;
+  --ring: 344 90% 84%;
 }
 
 @layer base {

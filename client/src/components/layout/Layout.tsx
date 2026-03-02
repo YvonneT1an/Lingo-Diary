@@ -16,16 +16,16 @@ export default function Layout({ children }: LayoutProps) {
   const [location] = useLocation();
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background md:flex-row">
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 border-r bg-card/50 backdrop-blur-sm px-4 py-8 shrink-0">
-        <div className="mb-8 px-4">
-          <h1 className="text-2xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+    <div className="flex flex-col min-h-[100dvh] bg-background">
+      {/* Desktop Top Navbar */}
+      <header className="hidden md:flex items-center justify-between h-16 px-8 border-b bg-card/50 backdrop-blur-sm sticky top-0 z-20">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">
             LingoDiary
           </h1>
         </div>
         
-        <nav className="flex flex-col gap-2">
+        <nav className="flex items-center gap-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href;
@@ -33,25 +33,25 @@ export default function Layout({ children }: LayoutProps) {
             return (
               <Link key={item.href} href={item.href}>
                 <a className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+                  "flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200",
                   isActive 
-                    ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20 font-medium" 
+                    ? "bg-primary text-primary-foreground font-medium shadow-sm shadow-primary/20" 
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 )}>
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4 h-4" />
                   <span>{item.label}</span>
                 </a>
               </Link>
             );
           })}
         </nav>
-      </aside>
+      </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-h-0 w-full max-w-4xl mx-auto pb-20 md:pb-0">
+      <main className="flex-1 flex flex-col min-h-0 w-full max-w-4xl mx-auto pb-20 md:pb-8 pt-0 md:pt-8 px-0 md:px-4">
         {/* Mobile Header */}
         <header className="md:hidden flex items-center h-14 px-4 border-b bg-background/80 backdrop-blur-md sticky top-0 z-10">
-          <h1 className="text-lg font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">
             LingoDiary
           </h1>
         </header>
@@ -75,10 +75,10 @@ export default function Layout({ children }: LayoutProps) {
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}>
                   <div className={cn(
-                    "p-1 rounded-full transition-all duration-200",
-                    isActive && "bg-primary/10"
+                    "p-1.5 rounded-full transition-all duration-200",
+                    isActive && "bg-primary/20 text-primary-foreground"
                   )}>
-                    <Icon className="w-5 h-5" />
+                    <Icon className={cn("w-5 h-5", isActive && "text-primary")} />
                   </div>
                   <span className="text-[10px] font-medium">{item.label}</span>
                 </a>
