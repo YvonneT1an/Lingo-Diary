@@ -7,14 +7,17 @@ A language learning app that lets users write diary entries in Chinese and get c
 - **Frontend**: React + Vite + Tailwind v4 + shadcn/ui + wouter routing
 - **Backend**: Express.js on Node
 - **Database**: PostgreSQL with Drizzle ORM
+- **AI**: OpenAI via Replit AI Integrations (gpt-5-mini for translation)
 - **State Management**: React Context + TanStack Query for server state
 
 ## Data Model
 
 - `phrases` table: `id` (serial PK), `english`, `chinese`, `explanation`, `context`, `examples`, `dateAdded`
+- `conversations` + `messages` tables: provided by OpenAI integration (unused currently)
 
 ## API Routes
 
+- `POST /api/translate` — translate Chinese text to casual American English (AI-powered)
 - `GET /api/phrases` — list all phrases (supports `?q=` search)
 - `GET /api/phrases/:id` — get single phrase
 - `POST /api/phrases` — create phrase
@@ -24,8 +27,10 @@ A language learning app that lets users write diary entries in Chinese and get c
 ## Key Files
 
 - `shared/schema.ts` — Drizzle schema + Zod validation
+- `server/db.ts` — Shared database connection pool
 - `server/storage.ts` — Database storage implementation
-- `server/routes.ts` — API route handlers
+- `server/routes.ts` — API route handlers (includes translate endpoint)
+- `server/replit_integrations/` — OpenAI integration boilerplate (chat, audio, image, batch)
 - `client/src/context/PhraseContext.tsx` — Client-side phrase state (wraps TanStack Query)
 - `client/src/pages/Write.tsx` — Diary write + translate page
 - `client/src/pages/Dictionary.tsx` — Saved phrases list
@@ -42,6 +47,6 @@ A language learning app that lets users write diary entries in Chinese and get c
 
 ## Notes
 
-- Translation is currently mocked (returns static text). Ready for AI integration.
-- No authentication — single-user, device-local experience.
+- Translation powered by OpenAI gpt-5-mini via Replit AI Integrations (no API key needed, billed to Replit credits)
+- No authentication — single-user, device-local experience
 - Font: Plus Jakarta Sans (display) + Inter (fallback)

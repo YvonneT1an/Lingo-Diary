@@ -3,11 +3,55 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertPhraseSchema, updatePhraseSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
+  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+});
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Translation endpoint
+  app.post("/api/translate", async (req, res) => {
+    const { text } = req.body;
+    if (!text || typeof text !== "string" || !text.trim()) {
+      return res.status(400).json({ message: "Text is required" });
+    }
+
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-5-mini",
+        messages: [
+          {
+            role: "system",
+            content: `You are a translation assistant. Translate the following Chinese diary entry into casual, natural American English. 
+The tone should sound like a young professional talking to a friend — relaxed, warm, and conversational. 
+Use common American slang and idioms where appropriate, but keep it natural and not forced.
+Only output the English translation, nothing else. Do not add any commentary, explanation, or notes.`,
+          },
+          {
+            role: "user",
+            content: text,
+          },
+        ],
+        max_completion_tokens: 8192,
+      });
+
+      const translation = response.choices[0]?.message?.content;
+      if (!translation) {
+        return res.status(500).json({ message: "Translation returned empty. Please try again." });
+      }
+      res.json({ translation });
+    } catch (error: any) {
+      console.error("Translation error:", error);
+      res.status(500).json({ message: "Translation failed. Please try again." });
+    }
+  });
+
+  // Phrase CRUD endpoints
   app.get("/api/phrases", async (_req, res) => {
     const q = _req.query.q as string | undefined;
     if (q && q.trim()) {

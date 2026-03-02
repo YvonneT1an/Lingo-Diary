@@ -26,3 +26,5 @@ export const updatePhraseSchema = createInsertSchema(phrases).omit({
 export type InsertPhrase = z.infer<typeof insertPhraseSchema>;
 export type UpdatePhrase = z.infer<typeof updatePhraseSchema>;
 export type Phrase = typeof phrases.$inferSelect;
+
+export * from "./models/chat";

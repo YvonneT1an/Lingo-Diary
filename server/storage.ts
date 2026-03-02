@@ -1,13 +1,6 @@
 import { phrases, type Phrase, type InsertPhrase, type UpdatePhrase } from "@shared/schema";
 import { eq, desc, or, ilike } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/node-postgres";
-import pg from "pg";
-
-const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-export const db = drizzle(pool);
+import { db } from "./db";
 
 export interface IStorage {
   getAllPhrases(): Promise<Phrase[]>;
