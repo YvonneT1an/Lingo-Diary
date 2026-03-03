@@ -45,6 +45,16 @@ A language learning app that lets users write diary entries in Chinese and get c
 - Foreground/text: #004d3a (forest green)
 - Accent: #c8bd00 (yellow green)
 
+## Testing
+
+- **Framework**: Vitest + Supertest
+- **Config**: `vitest.config.ts`
+- **Run**: `npx vitest run`
+- **Test files**:
+  - `tests/schema.test.ts` — Zod schema validation (insert + update schemas)
+  - `tests/routes.test.ts` — API route tests with mocked storage and OpenAI
+  - `tests/storage.test.ts` — Database storage integration tests (real PostgreSQL)
+
 ## Notes
 
 - Translation powered by OpenAI gpt-5-mini via Replit AI Integrations (no API key needed, billed to Replit credits)
