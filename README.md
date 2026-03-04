@@ -1,6 +1,15 @@
 # LingoDiary
 
-A language learning app that helps you improve your English by writing daily diary entries in Chinese. Get casual, natural American English translations powered by AI, save interesting phrases to your personal dictionary, and review them with interactive 3D flip-card flashcards.
+A full-stack language learning platform that helps Chinese speakers improve their English through daily journaling. Users write diary entries in Chinese, receive natural American English translations powered by AI, and build a personal phrase dictionary with spaced-repetition flashcard review.
+
+# Product Vision
+
+LingoDiary explores how AI-assisted writing tools can support second-language fluency by:
+- Reducing translation friction
+- Turning passive corrections into active recall practice
+- Structuring learning around user-generated content
+  
+The system is designed as a modular full-stack application to explore API boundaries, service responsibilities, and deployment trade-offs.
 
 ## Features
 
@@ -17,6 +26,26 @@ A language learning app that helps you improve your English by writing daily dia
 - **Database**: PostgreSQL with Drizzle ORM
 - **AI**: OpenAI (gpt-5-mini) via Replit AI Integrations
 - **Testing**: Vitest, Supertest
+
+## System Architecture Overview
+
+This project is implemented as a full-stack Express monolith:
+```bash
+Browser
+   ↓
+Express Server (Node.js)
+   ├── Serves React static assets
+   └── Handles REST API routes
+         ↓
+     PostgreSQL
+```
+ Architectural Characteristics:
+- Single runtime process (Express)
+- React frontend served as static assets by backend
+- REST API for translation and phrase management
+- Shared schema validation via Zod
+- Database abstraction through an IStorage interface
+This architecture prioritizes simplicity and rapid iteration while preserving clear service boundaries.
 
 ## Getting Started
 
@@ -59,34 +88,6 @@ This runs 43 tests across three test suites:
 - **Route tests** — API endpoint tests with mocked storage and OpenAI
 - **Storage tests** — Database integration tests against PostgreSQL
 
-## Project Structure
-
-```
-client/
-  src/
-    components/
-      layout/Layout.tsx      # App shell (top nav desktop, bottom tabs mobile)
-      PhraseModal.tsx         # Save/edit phrase dialog
-    context/
-      PhraseContext.tsx       # Phrase state management (TanStack Query)
-    pages/
-      Write.tsx               # Diary write + translate page
-      Dictionary.tsx          # Saved phrases list with search
-      Review.tsx              # Flashcard review page
-    App.tsx                   # Router and app entry point
-server/
-  index.ts                   # Express server setup
-  routes.ts                  # API route handlers
-  storage.ts                 # Database storage layer (IStorage interface)
-  db.ts                      # Database connection
-shared/
-  schema.ts                  # Drizzle schema + Zod validation types
-tests/
-  schema.test.ts             # Schema validation tests
-  routes.test.ts             # API route tests
-  storage.test.ts            # Storage integration tests
-```
-
 ## API Endpoints
 
 | Method | Endpoint | Description |
@@ -107,6 +108,12 @@ tests/
 | Foreground | Forest green | `#004d3a` |
 | Accent | Yellow-green | `#c8bd00` |
 
-## License
+## Future Exploration
 
-MIT
+If scaling beyond the prototype stage:
+- Separate frontend
+- Containerize backend 
+- Introduce API versioning
+- Add authentication & rate limiting
+- Decouple translation service from core API
+- Add observability (structured logging + metrics)
